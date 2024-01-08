@@ -1,20 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import Link from "next/link"
 import SignInGithub from "@/components/signingithub"
 import SignInGoogle from "@/components/signingoogle"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
+import SignInForm from "@/components/signinform"
 
 
 export default async function AuthenticationPage() {
@@ -48,18 +44,8 @@ export default async function AuthenticationPage() {
               </span>
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="example@gmail.com" />
-          </div>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">Sign In</Button>
-        </CardFooter>
-        <CardDescription className="flex justify-center pb-5 space-x-3">
-          <span>Create a new account</span>
-          <Link href={"/signup"}>Sign Up</Link>
-        </CardDescription>
+        <SignInForm/>
       </Card>
     </div>
   )
