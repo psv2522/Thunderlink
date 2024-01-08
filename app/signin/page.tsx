@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +12,18 @@ import {
 import Link from "next/link"
 import SignInGithub from "@/components/signingithub"
 import SignInGoogle from "@/components/signingoogle"
-export default function AuthenticationPage() {    
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
+
+
+export default async function AuthenticationPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    return redirect("/")
+  }
+  
   return (
     <div className="h-screen mx-auto my-auto flex items-center justify-center">
       <Card>

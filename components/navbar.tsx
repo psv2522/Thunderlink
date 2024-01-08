@@ -18,7 +18,7 @@ export default function NavBar() {
                 width={20}
                 height={20}
                 alt="logo"/>
-              <span>Fablink</span>
+              <span>Zaplink</span>
               </div>
             </Link>
             <div className="flex space-x-4">
