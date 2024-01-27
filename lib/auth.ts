@@ -8,6 +8,28 @@ import prisma from "./db"
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
+  events: {
+    async linkAccount({ user }) {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          emailVerified: new Date(),
+        },
+      })
+      await prisma.userinfo.create({
+        data: {
+          id: user.id,
+          accountId: user.email?.split("@")[0]
+        },
+      })
+    },
+  },
+  pages: {
+    signIn: "/signin",
+    error: "/error"
+  },
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
