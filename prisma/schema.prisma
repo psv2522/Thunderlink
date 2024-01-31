@@ -30,7 +30,7 @@ model Account {
 
 model Userinfo {  
   id        String   @id @default(cuid())
-  accountId String   @unique @default(cuid()) 
+  accountId String   @default(cuid()) @unique
   insta     String?
   facebook  String?
   twitter   String?

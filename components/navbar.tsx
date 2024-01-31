@@ -1,16 +1,21 @@
-"use client";
-
 import * as React from "react";
 import { ModeToggle } from "./modetoggle";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { authOptions } from '@/lib/auth';
+import { getServerSession } from 'next-auth'
+import LogoutButton from "./logoutbutton";
+import SignInButton from "./signinbutton";
+import SettingsButton from "./settingsbutton";
 
-export default function NavBar() {
+
+export default async function NavBar() {
+  const session = await getServerSession(authOptions);
+
   return (
     <div>
-      <nav className="sticky top-0 z-10 backdrop-filter backdrop-blur-lg bg-opacity-30 border-b ">
-        <div className="max-w-7xl mx-auto px-4">
+      <nav className="sticky top-0 z-10 pt-5">
+        <div className="w-11/12 mx-auto px-4 py-3 border rounded-2xl">
           <div className="flex items-center justify-between h-16">
             <Link href={"/"}>
               <div className="flex text-xl font-semibold space-x-3">
@@ -24,10 +29,14 @@ export default function NavBar() {
             </Link>
             <div className="flex space-x-4">
               <div className="flex space-x-4 py-2 items-center">
-                <Link href={"/about"}>About</Link>
-                <Button asChild>
-                  <Link href={"/signin"}>Log In</Link>
-                </Button>
+                {session ? (
+                  <>
+                  <LogoutButton/>
+                  <SettingsButton/>
+                  </>
+                ) : (
+                  <SignInButton/>
+                )}
                 <ModeToggle />
               </div>
             </div>

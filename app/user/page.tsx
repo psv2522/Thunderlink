@@ -1,9 +1,21 @@
-import { Button } from "@/components/ui/button"
+import { authOptions } from '@/lib/auth';
+import { getServerSession } from 'next-auth'
+import NavBar from '@/components/navbar';
 
-export default function User() {
+export default async function User() {
+  const session = await getServerSession(authOptions);
   return (
     <div>
-      <Button>User</Button>
+      <NavBar />
+      {session ? (
+        <div>
+          <h2>Hi logged in userid</h2>
+        </div>
+      ) : (
+        <div>
+          <h2>Please log in to make your page</h2>
+        </div>
+      )}
     </div>
   )
 }
