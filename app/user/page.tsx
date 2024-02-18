@@ -1,6 +1,6 @@
-import { authOptions } from '@/lib/auth';
-import { getServerSession } from 'next-auth'
-import NavBar from '@/components/navbar';
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import NavBar from "@/components/navbar";
 
 export default async function User() {
   const session = await getServerSession(authOptions);
@@ -17,5 +17,5 @@ export default async function User() {
         </div>
       )}
     </div>
-  )
+  );
 }

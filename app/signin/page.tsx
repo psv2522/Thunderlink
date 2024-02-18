@@ -4,24 +4,23 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import SignInGithub from "@/components/signingithub"
-import SignInGoogle from "@/components/signingoogle"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import SignInForm from "@/components/signinform"
-
+} from "@/components/ui/card";
+import SignInGithub from "@/components/signingithub";
+import SignInGoogle from "@/components/signingoogle";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import SignInForm from "@/components/signinform";
 
 export default async function AuthenticationPage() {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    return redirect("/user")
+    return redirect("/user");
   }
-  
+
   return (
-    <div className="h-screen mx-auto my-auto flex items-center justify-center">
+    <div className="mx-auto my-auto flex h-screen items-center justify-center">
       <Card>
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Sign In</CardTitle>
@@ -30,9 +29,9 @@ export default async function AuthenticationPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="flex justify-center gap-16">
-              <SignInGithub/>
-              <SignInGoogle/>
+          <div className="flex justify-center gap-12">
+            <SignInGithub />
+            <SignInGoogle />
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -45,8 +44,8 @@ export default async function AuthenticationPage() {
             </div>
           </div>
         </CardContent>
-        <SignInForm/>
+        <SignInForm />
       </Card>
     </div>
-  )
+  );
 }

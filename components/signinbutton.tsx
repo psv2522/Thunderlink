@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Button } from "./ui/button"
-import Link from "next/link"
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function SignInButton() {
   return (
@@ -10,5 +10,5 @@ export default function SignInButton() {
         <Link href={"/signin"}>Sign in</Link>
       </Button>
     </div>
-  )
+  );
 }
