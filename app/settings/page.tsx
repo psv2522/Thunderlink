@@ -10,7 +10,7 @@ export default async function Settings() {
   if (!session) {
     return redirect("/signin");
   }
-
+    
   return (
     <div className="space-y-6">
       <div>

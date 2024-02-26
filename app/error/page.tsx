@@ -1,4 +1,4 @@
-import SignInButton from "@/components/signin";
+import SignInButton from "@/components/signinbutton";
 
 export default async function Error() {
   return (
