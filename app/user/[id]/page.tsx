@@ -1,10 +1,11 @@
-"use client";
-
+import NavBar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function User() {
   return (
+    <div>
+      <NavBar/>
     <div className="flex h-screen">
       <div className="mx-auto mt-28 flex w-7/12 flex-col justify-between">
         <div className="space-y-3 text-center">
@@ -23,6 +24,7 @@ export default function User() {
           <Button>Get your own zaplink now</Button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

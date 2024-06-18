@@ -5,12 +5,12 @@ import { ProfileForm } from "./profile-form";
 import { Separator } from "@/components/ui/separator";
 
 export default async function Settings() {
-  const session = getServerSession(authOptions);
-
+  const session = await getServerSession(authOptions);
+  
   if (!session) {
-    return redirect("/signin");
+    redirect("/signin");
   }
-    
+  
   return (
     <div className="space-y-6">
       <div>

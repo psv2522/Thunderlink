@@ -1,12 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `user` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE "user";
-
 -- CreateTable
 CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
@@ -23,6 +14,20 @@ CREATE TABLE "accounts" (
     "session_state" TEXT,
 
     CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "userinfo" (
+    "id" TEXT NOT NULL,
+    "accountId" TEXT NOT NULL,
+    "insta" TEXT,
+    "facebook" TEXT,
+    "twitter" TEXT,
+    "snapchat" TEXT,
+    "linkedin" TEXT,
+    "personal" TEXT,
+
+    CONSTRAINT "userinfo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -57,7 +62,13 @@ CREATE TABLE "verificationtokens" (
 CREATE UNIQUE INDEX "accounts_provider_provider_account_id_key" ON "accounts"("provider", "provider_account_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "userinfo_accountId_key" ON "userinfo"("accountId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "sessions_session_token_key" ON "sessions"("session_token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "sessions_user_id_key" ON "sessions"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
@@ -70,6 +81,9 @@ CREATE UNIQUE INDEX "verificationtokens_identifier_token_key" ON "verificationto
 
 -- AddForeignKey
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "userinfo" ADD CONSTRAINT "userinfo_id_fkey" FOREIGN KEY ("id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
