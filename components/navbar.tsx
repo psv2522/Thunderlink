@@ -14,7 +14,7 @@ export default async function NavBar() {
   return (
     <div>
       <nav className="sticky top-0 z-10 pt-5">
-        <div className="mx-auto w-11/12 rounded-2xl border px-4 py-3">
+        <div className="mx-auto w-11/12 rounded-2xl border-solid border-2 shadow-lg px-4 py-3">
           <div className="flex h-16 items-center justify-between">
             <Link href={"/"}>
               <div className="flex space-x-3 text-xl font-semibold">
