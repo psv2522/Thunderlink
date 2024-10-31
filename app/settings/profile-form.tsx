@@ -3,9 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import { Instagram } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,17 +14,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import LogoutButton from "@/components/logoutbutton";
+import { saveProfile, checkUsername } from "@/app/actions/profile";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useDebouncedCallback } from "use-debounce";
 
 const profileFormSchema = z.object({
+  fullname: z
+    .string()
+    .min(2, {
+      message: "Username must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "Username must not be longer than 30 characters.",
+    }),
   username: z
     .string()
     .min(2, {
@@ -41,7 +44,12 @@ const profileFormSchema = z.object({
       required_error: "Please select an email to display.",
     })
     .email(),
-  bio: z.string().max(160),
+  bio: z.string().max(128).optional().default(""),
+  bgImage: z
+    .string()
+    .url({ message: "Please enter a valid URL." })
+    .optional()
+    .or(z.literal("")),
   urls: z
     .array(
       z.object({
@@ -53,16 +61,19 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  bio: "I own a computer.",
-  urls: [
-    { value: "https://shadcn.com" },
-    { value: "http://twitter.com/shadcn" },
-  ],
-};
+export function ProfileForm(profileInfo: any) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
 
-export function ProfileForm() {
+  const defaultValues: Partial<ProfileFormValues> = {
+    fullname: profileInfo.info.name,
+    username: profileInfo.info.userinfo.accountId,
+    email: profileInfo.info.email,
+    bio: profileInfo.info.userinfo.bio ?? "",
+    bgImage: profileInfo.info.userinfo.bgImage ?? "",
+  };
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -74,15 +85,50 @@ export function ProfileForm() {
     control: form.control,
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const checkUsernameAvailability = useDebouncedCallback(async (username: string) => {
+    if (username.length < 2) {
+      setUsernameAvailable(null);
+      return;
+    }
+
+    try {
+      setIsCheckingUsername(true);
+      const result = await checkUsername(username);
+      setUsernameAvailable(result.available);
+    } catch (error) {
+      console.error('Failed to check username:', error);
+      setUsernameAvailable(null);
+    } finally {
+      setIsCheckingUsername(false);
+    }
+  }, 500);
+
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      setIsSubmitting(true);
+      await saveProfile({
+        fullname: data.fullname,
+        username: data.username,
+        bio: data.bio || "",
+        bgImage: data.bgImage || "",
+      });
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          typeof error === "string"
+            ? error
+            : "Failed to save profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -90,15 +136,15 @@ export function ProfileForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="fullname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="Username" {...field} />
+                <Input placeholder="Name" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display userid.
+                Name displayed on the profile page.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -109,12 +155,60 @@ export function ProfileForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    placeholder="Username"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      checkUsernameAvailability(e.target.value);
+                    }}
+                    className={`${
+                      isCheckingUsername ? 'pr-12' : 'pr-8'
+                    } ${
+                      usernameAvailable === true ? 'border-green-500' : 
+                      usernameAvailable === false ? 'border-red-500' : ''
+                    }`}
+                  />
+                  <div className="absolute right-3 top-2.5">
+                    {isCheckingUsername ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    ) : usernameAvailable === true ? (
+                      <span className="text-green-500">✓</span>
+                    ) : usernameAvailable === false ? (
+                      <span className="text-red-500">✗</span>
+                    ) : null}
+                  </div>
+                </div>
+              </FormControl>
+              <FormDescription className="flex items-center gap-2">
+                {isCheckingUsername ? (
+                  "Checking availability..."
+                ) : usernameAvailable === true ? (
+                  <span className="text-green-500">Username is available!</span>
+                ) : usernameAvailable === false ? (
+                  <span className="text-red-500">Username is already taken</span>
+                ) : (
+                  "Unique userid that determines your link as well."
+                )}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="xyz@example.com" {...field} readOnly />
+                <Input {...field} readOnly />
               </FormControl>
               <FormDescription>
-                This is your email id linked to the account.
+                This is your email id linked to this account.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -133,45 +227,46 @@ export function ProfileForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Bio visible on the main page</FormDescription>
+              <FormDescription>
+                Bio is visible your custom link page.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div>
-          {fields.map((field, index) => (
-            <FormField
-              control={form.control}
-              key={field.id}
-              name={`urls.${index}.value`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    URLs
-                  </FormLabel>
-                  <FormDescription className={cn(index !== 0 && "sr-only")}>
-                    Add links to your website, blog, or social media profiles.
-                  </FormDescription>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2"
-            onClick={() => append({ value: "" })}
-          >
-            Add URL
-          </Button>
-        </div>
-        <Button type="submit">Update profile</Button>
+        <FormField
+          control={form.control}
+          name="bgImage"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bg Image URL</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Add your bg image url here"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                The link added here is shown as the background image on your
+                profile page
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            "Update profile"
+          )}
+        </Button>
       </form>
+      <LogoutButton />
     </Form>
   );
 }

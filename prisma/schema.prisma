@@ -8,45 +8,52 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
 
+model Userinfo {
+  id        String  @id @default(cuid())
+  accountId String  @unique @default(cuid())
+  bio       String? @default("")
+  bgImage   String?
+  links     Link[]
+  user      User    @relation(fields: [id], references: [id], onDelete: Cascade)
 
-model Userinfo {  
-  id        String   @id @default(cuid())
-  accountId String   @default(cuid()) @unique
-  insta     String?
-  facebook  String?
-  twitter   String?
-  snapchat  String?
-  linkedin  String?
-  personal  String?
-  user User  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@index([accountId])
   @@map("userinfo")
+}
+
+model Link {
+  id        String   @id @default(cuid())
+  baseUrl   String
+  username  String
+  accountId String
+  userInfo  Userinfo @relation(fields: [accountId], references: [accountId], onDelete: Cascade)
+
+  @@map("links")
 }
 
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id") @unique
+  userId       String   @unique @map("user_id")
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -58,9 +65,8 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
-  sessions      Session[]
-  userinfo     Userinfo?
-
+  sessions      Session?
+  userinfo      Userinfo?
 
   @@map("users")
 }

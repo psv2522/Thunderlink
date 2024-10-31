@@ -25,6 +25,33 @@ export const authOptions = {
         },
       });
     },
+    async signIn({ user }) {
+      const account = await prisma.account.findFirst({
+        where: { userId: user.id }
+      });
+      
+      if (!account) {
+        if (!user.name) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: "John Doe" }
+          });
+        }
+
+        const existingUserInfo = await prisma.userinfo.findUnique({
+          where: { id: user.id }
+        });
+
+        if (!existingUserInfo) {
+          await prisma.userinfo.create({
+            data: {
+              id: user.id,
+              accountId: user.email?.split("@")[0],
+            },
+          });
+        }
+      }
+    }
   },
   pages: {
     signIn: "/signin",

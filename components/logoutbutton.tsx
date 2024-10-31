@@ -12,6 +12,7 @@ export default function LogoutButton() {
             callbackUrl: `${window.location.origin}/signin`,
           })
         }
+        variant={"destructive"}
       >
         Logout
       </Button>

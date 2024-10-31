@@ -14,12 +14,12 @@ export default async function NavBar() {
   return (
     <div>
       <nav className="sticky top-0 z-10 pt-5">
-        <div className="mx-auto w-11/12 rounded-2xl border-solid border-2 shadow-lg px-4 py-3">
-          <div className="flex h-16 items-center justify-between">
+        <div className="mx-auto w-11/12 rounded-2xl border-2 border-solid px-4 py-3 shadow-lg">
+          <div className="flex h-10 items-center justify-between">
             <Link href={"/"}>
               <div className="flex space-x-3 text-xl font-semibold">
-                <Image src="/logo.svg" width={20} height={20} alt="logo" />
-                <span>Zaplink</span>
+                <Image src="/logo.png" width={30} height={30} alt="logo" className="rounded-full" />
+                <span>Thunderlink</span>
               </div>
             </Link>
             <div className="flex space-x-4">
