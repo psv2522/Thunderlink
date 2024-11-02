@@ -58,10 +58,6 @@ export const authOptions = {
     error: "/error",
   },
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,

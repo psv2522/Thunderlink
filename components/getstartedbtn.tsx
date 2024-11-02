@@ -4,16 +4,14 @@ import { HoverBorderGradient } from "./ui/hover-border-gradient";
 
 export default function GetStartedBtn() {
   return (
-    <div>
-      <Link href="/signin">
-        <HoverBorderGradient
-          containerClassName="rounded-full"
-          as="button"
-          className="flex items-center space-x-2 bg-white text-black dark:bg-black dark:text-white"
-        >
-          <span>Get your Thunderlink</span>
-        </HoverBorderGradient>
-      </Link>
-    </div>
+    <Link href="/signin">
+      <HoverBorderGradient
+        containerClassName="rounded-full"
+        as="button"
+        className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:scale-105 dark:from-purple-500 dark:to-blue-500"
+      >
+        <span>Get your Thunderlink</span>
+      </HoverBorderGradient>
+    </Link>
   );
 }

@@ -12,9 +12,9 @@ export default async function NavBar() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div>
-      <nav className="sticky top-0 z-10 pt-5">
-        <div className="mx-auto w-11/12 rounded-2xl border-2 border-solid px-4 py-3 shadow-lg">
+    <div className="fixed w-full">
+      <nav className="z-10 px-4 py-3">
+        <div className="mx-auto w-11/12 rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-md dark:bg-black/10">
           <div className="flex h-10 items-center justify-between">
             <Link href={"/"}>
               <div className="flex space-x-3 text-xl font-semibold">

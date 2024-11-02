@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function SignInButton() {
   return (
     <div>
-      <Button asChild>
+      <Button asChild variant={"secondary"}>
         <Link href={"/signin"}>Sign in</Link>
       </Button>
     </div>

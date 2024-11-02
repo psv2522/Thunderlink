@@ -165,18 +165,21 @@ export function ProfileForm(profileInfo: any) {
                       field.onChange(e);
                       checkUsernameAvailability(e.target.value);
                     }}
-                    className={`${
-                      isCheckingUsername ? 'pr-12' : 'pr-8'
-                    } ${
-                      usernameAvailable === true ? 'border-green-500' : 
-                      usernameAvailable === false ? 'border-red-500' : ''
+                    className={`${isCheckingUsername ? "pr-12" : "pr-8"} ${
+                      usernameAvailable === true
+                        ? "border-green-500"
+                        : usernameAvailable === false
+                          ? "border-red-500"
+                          : ""
                     }`}
                   />
                   <div className="absolute right-3 top-2.5">
                     {isCheckingUsername ? (
                       <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                     ) : usernameAvailable === true ? (
-                      <span className="text-green-500">✓</span>
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500">
+                        <span className="text-sm text-white">✓</span>
+                      </div>
                     ) : usernameAvailable === false ? (
                       <span className="text-red-500">✗</span>
                     ) : null}
@@ -189,9 +192,16 @@ export function ProfileForm(profileInfo: any) {
                 ) : usernameAvailable === true ? (
                   <span className="text-green-500">Username is available!</span>
                 ) : usernameAvailable === false ? (
-                  <span className="text-red-500">Username is already taken</span>
+                  <span className="text-red-500">
+                    Username is already taken
+                  </span>
                 ) : (
-                  "Unique userid that determines your link as well."
+                  <a
+                    href={`/user/${profileInfo.info.userinfo.accountId}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Your profile is active here
+                  </a>
                 )}
               </FormDescription>
               <FormMessage />
