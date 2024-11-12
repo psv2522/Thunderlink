@@ -45,7 +45,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
     <div className="space-y-6 p-4 pb-16 md:p-10">
       <div className="flex items-center justify-between">
         <Link
-          href={`/user/${currentUserInfo?.accountId}`}
+          href={`/u/${currentUserInfo?.accountId}`}
           className="mb-4 text-sm text-muted-foreground hover:text-primary"
         >
           ← Back to Profile

@@ -15,7 +15,7 @@ export default async function AuthenticationPage() {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    return redirect("/user");
+    return redirect("/u");
   }
 
   return (

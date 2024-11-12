@@ -8,7 +8,7 @@ export default function SignInGoogle() {
     <Button
       onClick={() =>
         signIn("google", {
-          callbackUrl: `${window.location.origin}/user`,
+          callbackUrl: `${window.location.origin}/u`,
         })
       }
       variant="outline"

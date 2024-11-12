@@ -197,7 +197,7 @@ export function ProfileForm(profileInfo: any) {
                   </span>
                 ) : (
                   <a
-                    href={`/user/${profileInfo.info.userinfo.accountId}`}
+                    href={`/u/${profileInfo.info.userinfo.accountId}`}
                     className="text-blue-500 hover:underline"
                   >
                     Your profile is active here

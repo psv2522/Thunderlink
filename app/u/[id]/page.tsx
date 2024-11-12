@@ -71,7 +71,7 @@ export default async function User({ params }: { params: { id: string } }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href={`/user/${currentUserInfo?.accountId}`}>
+                <Link href={`/u/${currentUserInfo?.accountId}`}>
                   <UserIcon className="mr-2 h-4 w-4" />
                   Profile
                 </Link>
