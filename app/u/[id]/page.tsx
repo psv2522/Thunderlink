@@ -88,7 +88,7 @@ export default async function User({ params }: { params: { id: string } }) {
       )}
       
       <div className="flex min-h-screen items-center justify-center">
-        <div className="w-[90%] sm:w-[85%] md:w-[75%] lg:w-[50%] flex flex-col items-center">
+        <div className="w-[90%] sm:w-[85%] md:w-[75%] lg:w-[50%] flex flex-col items-center mt-[5%]">
           <div className="text-center w-full max-w-md">
             <Image
               src={userexists?.user.image ?? "/profilepic.jpg"}

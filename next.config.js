@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "icons.duckduckgo.com",
+        hostname: "favicon.twenty.com",
       },
       {
         protocol: "https",
@@ -13,14 +13,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "www.google.com",
-      },
-      {
-        protocol: "https",
-        hostname: "icon.horse",
       },
     ],
   },

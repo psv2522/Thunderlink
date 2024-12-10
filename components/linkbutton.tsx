@@ -9,7 +9,7 @@ export default function LinkButton({
   username: string;
   url: string;
 }) {
-  const faviconUrl = `https://icons.duckduckgo.com/ip3/${new URL(url).hostname}.ico`;
+  const faviconUrl = `https://favicon.twenty.com/${new URL(url).hostname}`;
 
   return (
     <div className="w-full">
